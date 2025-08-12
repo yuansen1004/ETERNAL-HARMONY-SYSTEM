@@ -1,0 +1,253 @@
+.event-dates {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Navigation Buttons */
+.event-navigation-top,
+.event-navigation-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.event-navigation-top .btn,
+.event-navigation-bottom .btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.main-event-image {
+    width: 80%;
+    height: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Event Description */
+.event-description {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto;
+    padding-right: 15px; /* For scrollbar spacing */
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #444;
+}
+
+.event-description p {
+    margin-bottom: 1em;
+}
+
+/* Scrollbar styling for Webkit browsers (Chrome, Safari) */
+.event-description::-webkit-scrollbar {
+    width: 8px;
+}
+
+.event-description::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.event-description::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.event-description::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* More Images Gallery */
+.event-images-gallery-wrapper {
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent items from wrapping */
+    padding-bottom: 10px; /* Space for scrollbar */
+}
+
+.event-images-gallery {
+    display: flex;
+    gap: 15px; /* Space between images */
+    padding: 10px 0; /* Vertical padding */
+}
+
+.gallery-thumbnail {
+    width: 150px; /* Fixed width for thumbnails */
+    height: 100px; /* Fixed height for thumbnails */
+    object-fit: cover; /* Cover the area, crop if necessary */
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Prevent thumbnails from shrinking */
+}
+
+.gallery-thumbnail:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Lightbox/Modal for Enlarged Image */
+.lightbox {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1050; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black w/ opacity */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.lightbox-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox-caption {
+    margin-top: 15px;
+    text-align: center;
+    color: #ccc;
+    font-size: 1.2rem;
+}
+
+/* Close button for lightbox */
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .event-detail-container h1 {
+        font-size: 2rem;
+    }
+
+    .event-description {
+        max-height: 300px; /* Adjust for smaller screens */
+    }
+
+    .gallery-thumbnail {
+        width: 120px;
+        height: 80px;
+    }
+
+    .event-navigation-top .btn,
+    .event-navigation-bottom .btn {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .event-detail-container {
+        padding-top: 20px;
+        padding-bottom: 30px;
+    }
+
+    .event-detail-container h1 {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+
+    .event-detail-container .text-muted,
+    .event-dates {
+        text-align: center;
+    }
+
+    .event-navigation-top .col-6,
+    .event-navigation-bottom .col-6 {
+        flex: 0 0 100%; /* Make them full width */
+        max-width: 100%;
+        text-align: center !important;
+        margin-bottom: 10px;
+    }
+
+    .event-navigation-top .btn,
+    .event-navigation-bottom .btn {
+        width: 100%; /* Full width button */
+    }
+
+    .event-images-gallery {
+        justify-content: flex-start; /* Align items to the start in mobile view */
+    }
+
+    .gallery-thumbnail {
+        width: 100px;
+        height: 70px;
+    }
+
+    .lightbox-close {
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+    }
+
+    /* Gallery Thumbnails */
+.gallery-thumbnail {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 5px;
+    max-height: 150px;
+    object-fit: cover;
+}
+
+.gallery-thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Modal Image */
+#modalImage {
+    max-height: 80vh;
+    width: auto;
+    margin: 0 auto;
+}
+
+/* Gallery Wrapper */
+.event-images-gallery-wrapper {
+    overflow-x: auto;
+}
+
+.event-images-gallery {
+    display: flex;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
+}
+
+.event-navigation-top .btn-outline-secondary {
+        color: #333 !important;
+        border-color: #6c757d;
+    }
+
+    .event-navigation-top .btn-outline-secondary:hover {
+        color: #fff !important;
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+}

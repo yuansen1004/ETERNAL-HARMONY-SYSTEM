@@ -1,0 +1,38 @@
+/* ===== COMPANY LIST PAGE SPECIFIC STYLES ===== */
+
+/* Company table specific styles - using .table class from overallpage.css */
+.company-table {
+    /* Inherits all styles from .table in overallpage.css */
+}
+
+/* Company action buttons - using .btn-edit and .btn-delete classes from overallpage.css */
+.btn-edit-company {
+    /* Inherits all styles from .btn-edit in overallpage.css */
+}
+
+.btn-delete-company {
+    /* Inherits all styles from .btn-delete in overallpage.css */
+}
+
+/* Company management header - using .header-row class from overallpage.css */
+.company-header {
+    /* Inherits all styles from .header-row in overallpage.css */
+}
+
+/* Company table responsive */
+@media (max-width: 768px) {
+    .company-table {
+        font-size: 14px;
+    }
+    
+    .company-table th,
+    .company-table td {
+        padding: 10px 15px;
+    }
+    
+    .company-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+} 

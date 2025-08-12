@@ -1,0 +1,134 @@
+/* ===== CUSTOMERS PAGE SPECIFIC STYLES ===== */
+
+/* Customer view details button - styled like other action buttons */
+.btn-view-details {
+    background-color: #f3f4f6;
+    color: #848b96;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-view-details:hover {
+    background-color: #a5a6a8;
+    color: #191c21;
+    transform: translateY(-2px);
+}
+
+/* Customer search and filter section */
+.customer-search-section {
+    margin-bottom: 20px;
+}
+
+.customer-search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.customer-search-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+}
+
+.customer-filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.customer-search-input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.customer-search-select {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.customer-search-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.customer-action-buttons {
+    display: flex;
+    gap: 10px;
+    align-self: center;
+}
+
+/* Customer table specific styles - using .table class from overallpage.css */
+.customer-table {
+    /* Inherits all styles from .table in overallpage.css */
+}
+
+/* Customer package and slot information */
+.customer-package-info {
+    margin-bottom: 5px;
+}
+
+.customer-package-name {
+    font-weight: 500;
+    color: #333;
+}
+
+.customer-company-name {
+    font-size: 11px;
+    color: #888;
+    display: block;
+    margin-top: 2px;
+}
+
+.customer-order-date {
+    font-size: 12px;
+    color: #666;
+    margin-left: 10px;
+}
+
+.customer-no-packages {
+    color: #999;
+    font-style: italic;
+}
+
+/* Customer responsive design */
+@media (max-width: 768px) {
+    .customer-search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .customer-search-group,
+    .customer-filter-group {
+        min-width: auto;
+    }
+    
+    .customer-action-buttons {
+        align-self: stretch;
+        justify-content: center;
+    }
+    
+    .customer-table {
+        font-size: 14px;
+    }
+    
+    .customer-table th,
+    .customer-table td {
+        padding: 10px 15px;
+    }
+} 

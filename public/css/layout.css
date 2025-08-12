@@ -1,0 +1,267 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "sidebar header"
+        "sidebar main";
+}
+
+.sidebar {
+    background-color: #f3f4f6;
+    color: white;
+    padding: 0px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 10;
+    height: 100vh;
+}
+
+.sidebar .logo {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    flex-shrink: 0;
+}
+
+.sidebar .logo img {
+    max-width: 150px;
+    height: auto;
+}
+
+.sidebar nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 0px;
+}
+
+.sidebar nav ul li a {
+    color: #848b96;
+    text-decoration: none;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 20px;
+    padding-right: 15px;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease, border-left 0.3s ease;
+    border-left: 5px solid transparent;
+}
+
+.sidebar nav ul li a:hover {
+    background-color: #a5a6a8;
+    color: #191c21;
+}
+
+.sidebar nav ul li a.active {
+    background-color: #a5a6a8;
+    color: #191c21;
+    border-right: 5px solid #191c21;
+}
+
+.sidebar nav ul li .has-submenu.active,
+.sidebar nav ul li .has-submenu:hover {
+    background-color: #d1d5db;
+}
+
+.top-navbar {
+    background-color: #ffffff;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    grid-area: header;
+}
+
+.top-navbar .navbar-logo img {
+    max-height: 40px;
+    width: auto;
+    display: block;
+}
+
+.top-navbar .user-info {
+    position: relative;
+    cursor: pointer;
+}
+
+.top-navbar .user-info .user-dropdown-wrapper {
+    position: relative;
+    padding-bottom: 3px;
+    display: inline-block;
+    outline: none;
+}
+
+.top-navbar .user-info .user-dropdown-wrapper span {
+    font-weight: bold;
+    color: #333;
+    padding-right: 10px;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.top-navbar .user-info .user-dropdown-wrapper:hover span {
+    border-bottom-color: #2c3e50;
+}
+
+.top-navbar .user-info .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 100%;
+    min-width: 150px;
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.top-navbar .user-info .dropdown-menu form {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.top-navbar .user-info .dropdown-menu a,
+.top-navbar .user-info .dropdown-menu form button {
+    display: block;
+    padding: 10px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.top-navbar .user-info .dropdown-menu a:hover,
+.top-navbar .user-info .dropdown-menu form button:hover {
+    background-color: #f4f7f6;
+}
+
+.content {
+    padding: 20px;
+    overflow-y: auto;
+    grid-area: main;
+    height: calc(100vh - 70px);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.background-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    max-width: 1100px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #e0e0e0;
+}
+
+/* Browse/filter bar modern design */
+.filter-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: nowrap;
+    margin-bottom: 0;
+}
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+}
+.form-label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+.form-select {
+    display: block;
+    width: 170px;
+    padding: 8px 12px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.form-select:focus {
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.10);
+}
+.btn-filter-clear {
+    background-color: #f3f4f6;
+    color: #848b96;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.btn-filter-clear:hover {
+    background-color: #a5a6a8;
+    color: #191c21;
+    transform: translateY(-1px);
+}
+.btn-filter-clear:active {
+    transform: translateY(0);
+}
+
+.filter-and-add-section {
+    margin-bottom: 32px !important;
+}
+
+.package-grid,
+.inventory-list,
+.slot-grid {
+    margin-top: 10px;
+}
