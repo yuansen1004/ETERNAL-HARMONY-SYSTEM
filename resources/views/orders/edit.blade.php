@@ -220,35 +220,71 @@
             
             <div class="form-group">
                 <label class="form-label">Payment Progress</label>
-                @if($order->payment_method === 'full_paid')
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="checkbox" name="installment_paid" id="installment_paid" value="1" {{ $order->installment_paid ? 'checked' : '' }}>
-                        <label for="installment_paid" style="margin: 0;">Paid in Full</label>
-                    </div>
-                @elseif($order->payment_method === 'installment')
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        @for($i = 1; $i <= $order->installment_duration; $i++)
-                            <input type="checkbox" name="installment_paid" value="{{ $i }}" id="installment_paid_{{ $i }}" {{ $order->installment_paid >= $i ? 'checked' : '' }} onclick="updateInstallmentPaid({{ $order->installment_duration }})">
-                        @endfor
-                        <span>{{ $order->installment_paid }}/{{ $order->installment_duration }} paid</span>
-                    </div>
-                    <input type="hidden" name="installment_paid" id="installment_paid_hidden" value="{{ $order->installment_paid }}">
-                    <script>
-                        function updateInstallmentPaid(max) {
-                            let count = 0;
-                            for (let i = 1; i <= max; i++) {
-                                if (document.getElementById('installment_paid_' + i).checked) count++;
-                            }
-                            document.getElementById('installment_paid_hidden').value = count;
-                        }
-                        document.addEventListener('DOMContentLoaded', function() {
-                            updateInstallmentPaid({{ $order->installment_duration }});
-                        });
-                    </script>
-                @endif
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #e0e0e0;">
+                    @if($order->payment_method === 'full_paid')
+                        <!-- Full Payment Progress -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" 
+                                   name="payment_progress" 
+                                   id="payment_progress" 
+                                   value="1" 
+                                   {{ $order->payment_progress ? 'checked' : '' }}
+                                   {{ Auth::user()->role === 'agent' && $order->payment_progress ? 'disabled' : '' }}>
+                            <label for="payment_progress" style="margin: 0; font-weight: 600;">Payment Complete</label>
+                            @if(Auth::user()->role === 'agent' && $order->payment_progress)
+                                <span style="color: #dc3545; font-size: 14px; margin-left: 10px; font-weight: 500;">
+                                    (Cannot be modified once completed)
+                                </span>
+                            @endif
+                        </div>
+                        <small style="color: #666; margin-top: 8px; display: block;">
+                            <strong>Payment Type:</strong> Full Payment
+                        </small>
+                    @elseif($order->payment_method === 'installment')
+                        <!-- Installment Payment Progress -->
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <span style="font-weight: 600; color: #333;">Installment Progress:</span>
+                                <span style="font-size: 18px; font-weight: bold; color: #28a745;">{{ $order->installment_paid }}/{{ $order->installment_duration }} Paid</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                @for($i = 1; $i <= $order->installment_duration; $i++)
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <input type="checkbox" 
+                                               name="installment_paid_checkboxes[]" 
+                                               value="{{ $i }}" 
+                                               id="installment_paid_{{ $i }}" 
+                                               {{ $order->installment_paid >= $i ? 'checked' : '' }}
+                                               {{ Auth::user()->role === 'agent' && $order->installment_paid >= $i ? 'disabled' : '' }}
+                                               onclick="updateInstallmentPaid({{ $order->installment_duration }})">
+                                        <label for="installment_paid_{{ $i }}" style="margin: 0; font-size: 14px;">{{ $i }}</label>
+                                    </div>
+                                @endfor
+                            </div>
+                            
+                            <input type="hidden" name="installment_paid" id="installment_paid_hidden" value="{{ $order->installment_paid }}">
+                            
+                            @if(Auth::user()->role === 'agent' && $order->installment_paid > 0)
+                                <small style="color: #dc3545; margin-top: 8px; display: block;">
+                                    <strong>Note:</strong> Agents cannot modify completed installment payments.
+                                </small>
+                            @endif
+                        </div>
+                        <small style="color: #666; margin-top: 8px; display: block;">
+                            <strong>Payment Type:</strong> Installment ({{ $order->installment_duration }} months)
+                        </small>
+                    @endif
+                    
+                    <small style="color: #666; margin-top: 15px; display: block; padding-top: 10px; border-top: 1px solid #e0e0e0;">
+                        @if(Auth::user()->role === 'agent')
+                            <strong>Note:</strong> Agents cannot modify payment progress once marked as complete.
+                        @else
+                            <strong>Note:</strong> Staff can modify payment progress at any time.
+                        @endif
+                    </small>
+                </div>
             </div>
-
-
 
             <div class="form-group">
                 <label for="package_status" class="form-label">Package Usage Status</label>
@@ -311,5 +347,21 @@
 
             <button type="submit" class="btn-primary">Update Order Status</button>
         </form>
+        
+        @if($order->payment_method === 'installment')
+        <script>
+            function updateInstallmentPaid(max) {
+                let count = 0;
+                for (let i = 1; i <= max; i++) {
+                    if (document.getElementById('installment_paid_' + i).checked) count++;
+                }
+                document.getElementById('installment_paid_hidden').value = count;
+            }
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                updateInstallmentPaid({{ $order->installment_duration }});
+            });
+        </script>
+        @endif
     </div>
 @endsection 

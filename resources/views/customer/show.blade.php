@@ -218,7 +218,7 @@
                             <th>Package</th>
                             <th>Company</th>
                             <th>Order Date</th>
-                            <th>Payment Method</th>
+                            <th>Payment Progress</th>
                             <th>Total Amount</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -233,13 +233,24 @@
                             <td>{{ $order->order_date->format('d M Y') }}</td>
                             <td>
                                 @if($order->payment_method === 'full_paid')
-                                    <span class="badge" style="background-color: #e3f2fd; color: #1976d2;">Full Payment</span>
+                                    @if($order->payment_progress)
+                                        <span class="badge bg-success">Paid</span>
+                                    @else
+                                        <span class="badge bg-warning">Unpaid</span>
+                                    @endif
                                 @elseif($order->payment_method === 'installment')
-                                    <span class="badge" style="background-color: #fff3e0; color: #f57c00;">
-                                        Installment ({{ $order->installment_duration ?? 'N/A' }} months)
-                                    </span>
+                                    <div>
+                                        <div style="font-weight: 500; color: #333;">{{ $order->installment_paid }}/{{ $order->installment_duration }} Paid</div>
+                                        <div style="font-size: 12px; color: #666;">
+                                            @if($order->installment_paid == $order->installment_duration)
+                                                <span style="color: #28a745;">Complete</span>
+                                            @else
+                                                <span style="color: #ffc107;">In Progress</span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 @else
-                                    <span class="badge" style="background-color: #f5f5f5; color: #666;">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}</span>
+                                    <span class="badge" style="background-color: #f5f5f5; color: #666;">N/A</span>
                                 @endif
                             </td>
                             <td>
@@ -289,7 +300,7 @@
                             <th>User Name</th>
                             <th>Company</th>
                             <th>Order Date</th>
-                            <th>Payment Method</th>
+                            <th>Payment Progress</th>
                             <th>Total Amount</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -341,13 +352,24 @@
                             <td>{{ $order->order_date->format('d M Y') }}</td>
                             <td>
                                 @if($order->payment_method === 'full_paid')
-                                    <span class="badge" style="background-color: #e3f2fd; color: #1976d2;">Full Payment</span>
+                                    @if($order->payment_progress)
+                                        <span class="badge bg-success">Paid</span>
+                                    @else
+                                        <span class="badge bg-warning">Unpaid</span>
+                                    @endif
                                 @elseif($order->payment_method === 'installment')
-                                    <span class="badge" style="background-color: #fff3e0; color: #f57c00;">
-                                        Installment ({{ $order->installment_duration ?? 'N/A' }} months)
-                                    </span>
+                                    <div>
+                                        <div style="font-weight: 500; color: #333;">{{ $order->installment_paid }}/{{ $order->installment_duration }} Paid</div>
+                                        <div style="font-size: 12px; color: #666;">
+                                            @if($order->installment_paid == $order->installment_duration)
+                                                <span style="color: #28a745;">Complete</span>
+                                            @else
+                                                <span style="color: #ffc107;">In Progress</span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 @else
-                                    <span class="badge" style="background-color: #f5f5f5; color: #666;">{{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}</span>
+                                    <span class="badge" style="background-color: #f5f5f5; color: #666;">N/A</span>
                                 @endif
                             </td>
                             <td>

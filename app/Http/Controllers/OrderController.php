@@ -6,6 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -86,20 +88,59 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
+        $user = Auth::user();
 
         $validated = $request->validate([
             'installment_paid' => 'nullable|integer|min:0',
             'package_status' => 'required|in:pending,complete',
+            'payment_progress' => 'nullable|boolean',
             'user_names' => 'nullable|array',
             'user_names.*' => 'nullable|string|max:255',
         ]);
 
-        $order->package_status = $validated['package_status'];
-        if ($order->payment_method === 'installment') {
-            $order->installment_paid = $validated['installment_paid'] ?? 0;
-        } else if ($order->payment_method === 'full_paid') {
-            $order->installment_paid = ($request->has('installment_paid') && $request->input('installment_paid')) ? 1 : 0;
+        // Handle payment progress updates based on payment method
+        if ($order->payment_method === 'full_paid') {
+            // For full payment orders
+            if (isset($validated['payment_progress'])) {
+                if ($user->role === 'agent' && $order->payment_progress) {
+                    // Agent cannot change payment progress if it's already marked as complete
+                    return redirect()->back()->with('error', 'Agents cannot modify payment progress once it has been marked as complete.');
+                }
+                
+                // Staff and admin can always modify payment progress
+                $order->payment_progress = $validated['payment_progress'];
+                $order->installment_paid = $validated['payment_progress'] ? 1 : 0;
+            }
+        } else if ($order->payment_method === 'installment') {
+            // For installment orders
+            if (isset($validated['installment_paid'])) {
+                $newInstallmentPaid = $validated['installment_paid'];
+                
+                // Check if agent is trying to decrease installment progress
+                if ($user->role === 'agent' && $newInstallmentPaid < $order->installment_paid) {
+                    return redirect()->back()->with('error', 'Agents cannot decrease installment progress once payments are marked as complete.');
+                }
+                
+                // Check if agent is trying to modify already completed installments
+                if ($user->role === 'agent' && $order->installment_paid > 0) {
+                    // Allow agents to only increase progress, not modify existing ones
+                    if ($newInstallmentPaid < $order->installment_paid) {
+                        return redirect()->back()->with('error', 'Agents cannot modify completed installment payments.');
+                    }
+                }
+                
+                $order->installment_paid = $newInstallmentPaid;
+                
+                // Update payment_progress based on installment completion
+                if ($newInstallmentPaid >= $order->installment_duration) {
+                    $order->payment_progress = true;
+                } else {
+                    $order->payment_progress = false;
+                }
+            }
         }
+
+        $order->package_status = $validated['package_status'];
         $order->save();
 
         // Update user names for slot orders
@@ -119,5 +160,30 @@ class OrderController extends Controller
         }
 
         return redirect()->route('orders.list')->with('success', 'Order updated successfully!');
+    }
+
+    public function exportToPdf($id)
+    {
+        $order = Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory', 'user'])->findOrFail($id);
+        
+        // Generate filename
+        $orderType = $order->package ? 'package' : 'inventory';
+        $agentName = $order->user ? str_replace(' ', '-', $order->user->name) : 'unknown';
+        $date = $order->order_date->format('Y-m-d');
+        $filename = "Order-{$orderType}-{$agentName}-{$date}.pdf";
+        
+        // Prepare data for PDF
+        $data = [
+            'order' => $order,
+            'orderType' => $orderType,
+            'agentName' => $order->user ? $order->user->name : 'Unknown Agent',
+            'currentDate' => now()->format('d M Y'),
+        ];
+        
+        // Generate PDF
+        $pdf = Pdf::loadView('orders.pdf', $data);
+        
+        // Return PDF as download
+        return $pdf->download($filename);
     }
 }

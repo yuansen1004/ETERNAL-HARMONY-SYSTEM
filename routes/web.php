@@ -28,15 +28,15 @@
 
     Route::get('/dashboard', function(){
         return view('dashboard');
-    });
+    })->middleware('admin.access');
 
     Route::get('/order', function(){
         return view('orders.list');
-    });
+    })->middleware('admin.access');
 
     Route::get('/ocr_system', function(){
         return view('ocr');
-    });
+    })->middleware('admin.access');
     // Inventory Navigation (Public routes)
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index'); // Main inventory page (all categories)
     Route::get('/inventory/category/{category}', [InventoryController::class, 'category'])->name('inventory.category'); // Category view
@@ -47,25 +47,25 @@
     Route::post('/inventory/item/{item}/purchase', [InventoryController::class, 'purchase'])->name('inventory.purchase'); // Handle purchase
     
     // Inventory Management Routes (Admin/Staff only)
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/inventory/create', [InventoryController::class, 'createSlot'])->name('inventory.slot.create'); // Show add slot form
         Route::post('/inventory/store', [InventoryController::class, 'storeSlot'])->name('inventory.slot.store'); // Handle add slot
     });
    
     // Bulk purchase routes (admin/staff only)
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/inventory/slot/{slot}/bulk-purchase', [InventoryController::class, 'bulkPurchaseForm'])->name('inventory.bulk-purchase.form'); // Show bulk purchase form
         Route::post('/inventory/slot/{slot}/bulk-purchase', [InventoryController::class, 'bulkPurchase'])->name('inventory.bulk-purchase'); // Handle bulk purchase
     });
    
     // User Management Routes - Available for both staff and agents
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/admin_staff', [UserController::class, 'adminStaff'])->name('adminStaff');
         Route::delete('/admin_staff/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
     // Company Routes - Staff only
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/company', [CompanyController::class, 'list'])->name('company.list');
         Route::get('/company/create', [CompanyController::class, 'create'])->name('company.create');
         Route::post('/company', [CompanyController::class, 'store'])->name('company.store');
@@ -80,7 +80,7 @@
     Route::get('/events/detail/{id}', [EventController::class, 'detail'])->name('events.detail');
     
     // Event Management Routes - Staff only
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/events', [EventController::class, 'list'])->name('events');
         Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
         Route::post('/events', [EventController::class, 'store'])->name('events.store');
@@ -97,7 +97,7 @@
     Route::get('/packages/compare/clear', [PackageController::class, 'clearCompare'])->name('packages.compare.clear');
     
     // Package Management Routes - Staff only
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['admin.access'])->group(function () {
         Route::get('/packages', [PackageController::class, 'index'])->name('packages.index');
         Route::get('/packages/create', [PackageController::class, 'create'])->name('packages.create');
         Route::post('/packages', [PackageController::class, 'store'])->name('packages.store');
@@ -107,21 +107,30 @@
     });
 
     // Customer routes
-    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
-    Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('customers.show');
-    Route::get('/customer/details', [CustomerController::class, 'showDetailsForm'])->name('customer.details');
-    Route::post('/customer/details/save', [CustomerController::class, 'saveDetails'])->name('customer.details.save');
+    Route::middleware(['admin.access'])->group(function () {
+        Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+        Route::get('/customers/{id}', [CustomerController::class, 'show'])->name('customers.show');
+        Route::get('/customer/details', [CustomerController::class, 'showDetailsForm'])->name('customer.details');
+        Route::post('/customer/details/save', [CustomerController::class, 'saveDetails'])->name('customer.details.save');
+    });
     // Order routes
-    Route::get('/order', [OrderController::class, 'index'])->name('orders.list');
-    Route::get('/order/{id}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('/order/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit');
-    Route::put('/order/{id}', [OrderController::class, 'update'])->name('orders.update');
+    Route::middleware(['admin.access'])->group(function () {
+        Route::get('/order', [OrderController::class, 'index'])->name('orders.list');
+        Route::get('/order/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::get('/order/{id}/edit', [OrderController::class, 'edit'])->name('orders.edit');
+        Route::put('/order/{id}', [OrderController::class, 'update'])->name('orders.update');
+        Route::get('/order/{id}/export-pdf', [OrderController::class, 'exportToPdf'])->name('orders.export-pdf');
+    });
     
     // Customer Eternal Harmony Page (Public - No Authentication Required)
     Route::get('/eternal_harmony', [CustomerController::class, 'eternalHarmony'])->name('eternal.harmony');
     Route::post('/eternal_harmony/select-company', [CustomerController::class, 'selectCompany'])->name('eternal.harmony.select-company');
     Route::post('/eternal_harmony/search', [CustomerController::class, 'searchPurchasedSlots'])->name('eternal.harmony.search');
-    Route::get('/inventory/item/{item}/edit-user', [InventoryController::class, 'editUserForm'])->name('inventory.item.edit-user');
-    Route::post('/inventory/item/{item}/update-user', [InventoryController::class, 'updateUser'])->name('inventory.item.update-user');
-    Route::get('/order/{order}/edit-users', [InventoryController::class, 'editOrderUsersForm'])->name('order.edit-users');
-    Route::post('/order/{order}/update-users', [InventoryController::class, 'updateOrderUsers'])->name('order.update-users');
+    
+    // Additional Inventory Management Routes (Admin/Staff only)
+    Route::middleware(['admin.access'])->group(function () {
+        Route::get('/inventory/item/{item}/edit-user', [InventoryController::class, 'editUserForm'])->name('inventory.item.edit-user');
+        Route::post('/inventory/item/{item}/update-user', [InventoryController::class, 'updateUser'])->name('inventory.item.update-user');
+        Route::get('/order/{order}/edit-users', [InventoryController::class, 'editOrderUsersForm'])->name('order.edit-users');
+        Route::post('/order/{order}/update-users', [InventoryController::class, 'updateOrderUsers'])->name('order.update-users');
+    });

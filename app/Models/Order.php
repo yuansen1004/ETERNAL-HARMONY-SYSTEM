@@ -15,11 +15,13 @@ class Order extends Model
         'customer_id',
         'package_id',
         'inventory_item_id',
+        'user_id',
         'order_date',
         'payment_method',
         'payment_status',
         'installment_duration',
         'installment_paid',
+        'payment_progress',
         'monthly_payment',
         'total_amount',
         'receipt_details',
@@ -32,6 +34,7 @@ class Order extends Model
         'monthly_payment' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'installment_paid' => 'integer',
+        'payment_progress' => 'boolean',
         'package_status' => 'string',
     ];
 
@@ -48,6 +51,11 @@ class Order extends Model
     // Payment method constants
     const METHOD_FULL_PAID = 'full_paid';
     const METHOD_INSTALLMENT = 'installment';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function customer()
     {

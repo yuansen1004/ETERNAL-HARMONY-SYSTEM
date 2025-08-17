@@ -77,7 +77,7 @@
                     <th>Package / Inventory Slot</th>
                     <th>Date</th>
                     <th>Status</th>
-                    <th>Payment Method</th>
+                    <th>Payment Progress</th>
                     <th>Total Amount</th>
                     <th>Actions</th>
                 </tr>
@@ -115,19 +115,33 @@
                     </td>
                     <td>
                         @if($order->payment_method === 'full_paid')
-                            <span class="badge" style="background-color: #e3f2fd; color: #1976d2; display: inline-block;">
-                                Full Payment
-                            </span><br>
-                            <span class="badge" style="<?php echo $order->installment_paid ? 'background-color: #d4edda; color: #155724;' : 'background-color: #f8d7da; color: #721c24;'; ?> display: inline-block; margin-top: 4px;">
-                                {{ $order->installment_paid ? 'Paid' : 'Unpaid' }}
-                            </span>
+                            <div style="text-align: center;">
+                                <div style="margin-bottom: 5px;">
+                                    <span class="badge" style="background-color: #e3f2fd; color: #1976d2; display: inline-block; font-size: 12px;">
+                                        Full Payment
+                                    </span>
+                                </div>
+                                @if($order->payment_progress)
+                                    <span class="badge" style="background-color: #d4edda; color: #155724; display: inline-block;">
+                                        ✅ Complete
+                                    </span>
+                                @else
+                                    <span class="badge" style="background-color: #f8d7da; color: #721c24; display: inline-block;">
+                                        ⏳ Pending
+                                    </span>
+                                @endif
+                            </div>
                         @elseif($order->payment_method === 'installment')
-                            <span class="badge" style="background-color: #fff3e0; color: #f57c00; display: inline-block;">
-                                Installment ({{ $order->installment_duration }} months)
-                            </span><br>
-                            <span class="badge" style="background-color: #f5f5f5; color: #666; display: inline-block; margin-top: 4px;">
-                                {{ $order->installment_paid }}/{{ $order->installment_duration }} paid
-                            </span>
+                            <div style="text-align: center;">
+                                <div style="margin-bottom: 5px;">
+                                    <span class="badge" style="background-color: #fff3e0; color: #f57c00; display: inline-block; font-size: 12px;">
+                                        Installment ({{ $order->installment_duration }} months)
+                                    </span>
+                                </div>
+                                <span class="badge" style="background-color: #f5f5f5; color: #666; display: inline-block;">
+                                    {{ $order->installment_paid }}/{{ $order->installment_duration }} Paid
+                                </span>
+                            </div>
                         @else
                             <span class="badge" style="background-color: #f5f5f5; color: #666; display: inline-block;">
                                 {{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}
@@ -141,8 +155,11 @@
                             N/A
                         @endif
                     </td>
-                    <td>
+                    <td style="display: flex; align-items: center; gap: 10px;">
                         <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-sm btn-edit">Edit</a>
+                        @if(Auth::user()->role === 'staff' || Auth::user()->role === 'admin')
+                            <a href="{{ route('orders.export-pdf', $order->id) }}" class="btn-edit">📄PDF</a>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

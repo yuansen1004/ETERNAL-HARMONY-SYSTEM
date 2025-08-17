@@ -129,6 +129,7 @@ class InventoryController extends Controller
             'customer_id' => $customer->id,
             'package_id' => null, // Not a package
             'inventory_item_id' => $item->id, // Reference the slot/item
+            'user_id' => Auth::id(), // Add the current authenticated user
             'order_date' => now(),
             'payment_status' => 'pending',
             'payment_method' => $validated['payment_method'],
@@ -425,6 +426,7 @@ class InventoryController extends Controller
             'customer_id' => $customer->id,
             'package_id' => null,
             'inventory_item_id' => $items[0]->id, // Store first item as primary reference
+            'user_id' => Auth::id(), // Add the current authenticated user
             'order_date' => now(),
             'payment_status' => 'pending',
             'payment_method' => $validated['payment_method'],

@@ -23,8 +23,9 @@ return new class extends Migration
             $table->decimal('monthly_payment', 10, 2)->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->json('receipt_details')->nullable();
-            $table->enum('package_status', ['active', 'inactive', 'expired'])->default('active');
+            $table->enum('package_status', ['pending', 'complete'])->default('pending');
             $table->boolean('installment_paid')->default(false);
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             
             // Indexes for better performance

@@ -90,7 +90,7 @@ class CustomerController extends Controller
         // Clear comparison session after successful order
         session()->forget('compare');
 
-        return redirect()->route('packages.index')->with('success', 'Order placed successfully!');
+        return redirect()->route('packages.compare')->with('success', 'Order placed successfully!');
     }
 
     public function index(Request $request)
