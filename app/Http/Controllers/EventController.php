@@ -46,8 +46,8 @@ class EventController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'more_images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
+                'more_images.*' => 'image|mimes:jpeg,png,jpg,gif',
                 'description' => 'required|string',
                 'sub_description' => 'nullable|string',
                 'start_date' => 'required|date',
@@ -168,9 +168,9 @@ class EventController extends Controller
         try {
             $validatedData = $request->validate([
                 'name' => 'required|max:255',
-                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
                 'more_images' => 'nullable|array',
-                'more_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'more_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
                 'description' => 'required',
                 'sub_description' => 'nullable',
                 'start_date' => 'required|date',

@@ -131,15 +131,7 @@
         <div class="slot-grid">
             @foreach($slots as $slot)
                 @php
-                    $slotImage = null;
-                    if ($slot->main_image) {
-                        $slotImage = $slot->main_image;
-                    } elseif ($slot->images) {
-                        $images = json_decode($slot->images, true);
-                        if (is_array($images) && !empty($images)) {
-                            $slotImage = $images[0];
-                        }
-                    }
+                    $slotImage = $slot->main_image ?? null;
                 @endphp
                 <a href="{{ route('inventory.slot', $slot->id) }}" class="slot-card">
                     @if($slotImage)

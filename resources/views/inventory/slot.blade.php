@@ -127,7 +127,7 @@
         .temple-background {
             position: relative;
             width: 100%;
-            min-height: 500px; /* Adjusted to match temple height + roof */
+            min-height: calc({{ $slot->rows ?? 5 }} * 60px + 190px); /* Increased height to accommodate roof and slots */
             background: #f8f9fa;
             border-radius: 8px;
             overflow: hidden;
@@ -141,7 +141,7 @@
         .temple-base {
             position: relative;
             width: calc({{ $slot->columns ?? 6 }} * 60px + 60px);
-            height: 400px; /* Fixed height to ensure temple always shows completely */
+            height: calc({{ $slot->rows ?? 5 }} * 60px + 140px); /* Increased height to accommodate roof and slots */
             background: #ffffff;
             border: 3px solid #000000;
             border-top: none;
@@ -199,12 +199,11 @@
 
         .inventory-overlay {
             position: absolute;
-            top: 50%;
+            top: 60px; /* Position below the roof, not centered */
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             z-index: 10;
-            max-height: 350px; /* Limit grid height to fit within temple */
-            overflow-y: auto; /* Add scroll if grid is too tall */
+            /* Removed max-height and overflow-y to eliminate scrollbar */
         }
 
         .inventory-grid {
@@ -294,15 +293,15 @@
 
         @media (max-width: 768px) {
             .temple-background {
-                min-height: 400px;
+                min-height: calc({{ $slot->rows ?? 5 }} * 50px + 150px); /* Increased height for mobile */
             }
 
             .temple-base {
-                height: 300px; /* Smaller temple height on mobile */
+                height: calc({{ $slot->rows ?? 5 }} * 50px + 100px); /* Increased height for mobile */
             }
 
             .inventory-overlay {
-                max-height: 250px; /* Smaller grid height on mobile */
+                top: 50px; /* Adjust position for mobile roof */
             }
 
             .grid-slot {

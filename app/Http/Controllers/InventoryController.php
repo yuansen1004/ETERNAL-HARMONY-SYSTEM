@@ -29,6 +29,37 @@ class InventoryController extends Controller
             $query->where('company_id', $request->company_id);
         }
         $slots = $query->get();
+        
+        // Get representative images for each slot
+        foreach ($slots as $slot) {
+            // First try to get image from the slot itself
+            if ($slot->images && !empty($slot->images)) {
+                $slotImages = json_decode($slot->images, true);
+                if (is_array($slotImages) && !empty($slotImages)) {
+                    $slot->main_image = $slotImages[0];
+                    continue;
+                }
+            }
+            
+            // If no slot image, try to get from the first available item
+            $firstItem = DB::table('inventory_items')
+                ->where('inventory_id', $slot->id)
+                ->whereNotNull('image')
+                ->first();
+            
+            if ($firstItem && $firstItem->image) {
+                $slot->main_image = $firstItem->image;
+            } elseif ($firstItem && $firstItem->images) {
+                $itemImages = json_decode($firstItem->images, true);
+                if (is_array($itemImages) && !empty($itemImages)) {
+                    $slot->main_image = $itemImages[0];
+                }
+            }
+        }
+        
+        // Debug: Log the slots data to ensure it's being retrieved correctly
+        Log::info('Category view slots data:', ['category' => $category, 'slots_count' => $slots->count()]);
+        
         return view('inventory.category', compact('category', 'companies', 'slots'));
     }
 
@@ -42,6 +73,34 @@ class InventoryController extends Controller
             $query->where('category', $category);
         }
         $slots = $query->get();
+        
+        // Get representative images for each slot
+        foreach ($slots as $slot) {
+            // First try to get image from the slot itself
+            if ($slot->images && !empty($slot->images)) {
+                $slotImages = json_decode($slot->images, true);
+                if (is_array($slotImages) && !empty($slotImages)) {
+                    $slot->main_image = $slotImages[0];
+                    continue;
+                }
+            }
+            
+            // If no slot image, try to get from the first available item
+            $firstItem = DB::table('inventory_items')
+                ->where('inventory_id', $slot->id)
+                ->whereNotNull('image')
+                ->first();
+            
+            if ($firstItem && $firstItem->image) {
+                $slot->main_image = $firstItem->image;
+            } elseif ($firstItem && $firstItem->images) {
+                $itemImages = json_decode($firstItem->images, true);
+                if (is_array($itemImages) && !empty($itemImages)) {
+                    $slot->main_image = $itemImages[0];
+                }
+            }
+        }
+        
         return view('inventory.company', compact('company', 'slots', 'category'));
     }
 
@@ -185,8 +244,8 @@ class InventoryController extends Controller
                 'row_group_counts.*' => 'required|integer|min:1',
                 'row_group_prices' => 'required|array|min:1',
                 'row_group_prices.*' => 'required|numeric|min:0',
-                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error('Validation failed for slot creation: ' . json_encode($e->errors()));
