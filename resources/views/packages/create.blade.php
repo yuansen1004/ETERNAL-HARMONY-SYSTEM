@@ -2,6 +2,9 @@
 
 @section('content')
     <link rel="stylesheet" href="{{ asset('css/addForm.css') }}">
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/quill-custom.css') }}">
 
     <div class="add-form-container">
         <h2>Create Package</h2>
@@ -14,7 +17,8 @@
             </div>
             <div class="add-form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter package description..." required></textarea>
+                <div id="quill-editor" style="height: 300px; margin-bottom: 10px; border: 1px solid #ccc; background: #fff;"></div>
+                <input type="hidden" id="description" name="description" required>
             </div>
             <div class="add-form-group">
                 <label for="price">Price</label>
@@ -34,4 +38,8 @@
             <a href="{{ route('packages.index') }}" class="add-form-cancel">Cancel</a>
         </form>
     </div>
+
+    <!-- Quill JavaScript -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="{{ asset('js/quill-editor.js') }}"></script>
 @endsection

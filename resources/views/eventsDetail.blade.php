@@ -33,31 +33,34 @@
     </div>
     @endif
 
-    <div class="row event-navigation-top mt-3 mb-4">
+    <!-- Navigation buttons above description -->
+    <div class="row event-navigation-description mt-4 mb-3">
         <div class="col-6 text-start">
             @if ($previousEvent)
-                <a href="{{ route('events.detail', $previousEvent->id) }}" class="btn btn-outline-secondary">
-                    &larr; Previous: {{ Str::limit($previousEvent->name, 30) }}
+                <a href="{{ route('events.detail', $previousEvent->id) }}" class="nav-link">
+                    &larr; Previous: {{ Str::limit($previousEvent->name, 25) }}
                 </a>
             @endif
         </div>
         <div class="col-6 text-end">
             @if ($nextEvent)
-                <a href="{{ route('events.detail', $nextEvent->id) }}" class="btn btn-outline-secondary">
-                    Next: {{ Str::limit($nextEvent->name, 30) }} &rarr;
+                <a href="{{ route('events.detail', $nextEvent->id) }}" class="nav-link">
+                    Next: {{ Str::limit($nextEvent->name, 25) }} &rarr;
                 </a>
             @endif
         </div>
     </div>
 
-    <div class="row mt-4">
+    <!-- Event description without scrollbar -->
+    <div class="row mt-2">
         <div class="col-12">
-            <div class="event-description scrollable">
+            <div class="event-description">
                 {!! $event->description !!}
             </div>
         </div>
     </div>
 
+    <!-- Bottom navigation buttons -->
     <div class="row event-navigation-bottom mt-5 mb-5">
         <div class="col-6 text-start">
             @if ($previousEvent)

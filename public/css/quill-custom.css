@@ -1,0 +1,143 @@
+/* Custom Quill Editor Styling */
+.ql-container {
+    font-family: inherit;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #dcdcdc;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.ql-container:focus-within {
+    border-color: #848b96;
+    box-shadow: 0 0 0 3px #f4f7f6;
+}
+
+.ql-toolbar {
+    border-radius: 6px 6px 0 0;
+    border: 1px solid #dcdcdc;
+    border-bottom: none;
+    background-color: #f8f9fa;
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Prevent duplicate toolbars */
+.ql-toolbar + .ql-toolbar {
+    display: none !important;
+}
+
+/* Ensure only one toolbar is visible */
+.ql-editor:not(:first-child) + .ql-toolbar {
+    display: none !important;
+}
+
+.ql-editor {
+    min-height: 200px;
+    padding: 15px;
+    line-height: 1.6;
+    color: #333;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.ql-editor p {
+    margin-bottom: 1em;
+}
+
+.ql-editor h1, .ql-editor h2, .ql-editor h3, 
+.ql-editor h4, .ql-editor h5, .ql-editor h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    color: #191c21;
+}
+
+.ql-editor ul, .ql-editor ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.ql-editor li {
+    margin-bottom: 0.5em;
+}
+
+.ql-editor a {
+    color: #848b96;
+    text-decoration: underline;
+}
+
+.ql-editor a:hover {
+    color: #191c21;
+}
+
+.ql-editor blockquote {
+    border-left: 4px solid #848b96;
+    margin: 1em 0;
+    padding-left: 1em;
+    font-style: italic;
+    color: #666;
+}
+
+/* Toolbar button styling */
+.ql-toolbar button {
+    color: #555;
+    transition: color 0.2s ease;
+}
+
+.ql-toolbar button:hover {
+    color: #191c21;
+}
+
+.ql-toolbar button.ql-active {
+    color: #848b96;
+}
+
+/* Form group styling for Quill */
+.add-form-group .ql-container,
+.form-group .ql-container {
+    margin-bottom: 10px;
+}
+
+/* Ensure proper spacing and prevent layout issues */
+.ql-editor-container {
+    position: relative;
+}
+
+/* Hide any duplicate elements that might be created */
+[id*="quill-editor"]:not(:first-of-type) {
+    display: none !important;
+}
+
+/* Ensure the main quill-editor is visible */
+#quill-editor {
+    display: block !important;
+    visibility: visible !important;
+    min-height: 300px !important;
+}
+
+/* Fallback textarea styling */
+#quill-fallback-textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .ql-toolbar {
+        padding: 8px;
+    }
+    
+    .ql-editor {
+        padding: 12px;
+        min-height: 150px;
+    }
+}

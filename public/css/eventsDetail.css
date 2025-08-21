@@ -6,18 +6,35 @@
 
 /* Navigation Buttons */
 .event-navigation-top,
-.event-navigation-bottom {
+.event-navigation-bottom,
+.event-navigation-description {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 2rem 0 1rem 0;
 }
 
 .event-navigation-top .btn,
-.event-navigation-bottom .btn {
+.event-navigation-bottom .btn,
+.event-navigation-description .btn {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
+}
+
+/* Navigation links above description */
+.event-navigation-description .nav-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.event-navigation-description .nav-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
 }
 
 .main-event-image {
@@ -30,38 +47,20 @@
     margin: 0 auto;
 }
 
-/* Event Description */
+/* Event Description - No scrollbar */
 .event-description {
-    max-height: 400px; /* Adjust as needed */
-    overflow-y: auto;
-    padding-right: 15px; /* For scrollbar spacing */
+    padding: 20px 0;
     font-size: 1.05rem;
     line-height: 1.7;
     color: #444;
+    overflow: visible; /* Remove scrollbar */
 }
 
 .event-description p {
     margin-bottom: 1em;
 }
 
-/* Scrollbar styling for Webkit browsers (Chrome, Safari) */
-.event-description::-webkit-scrollbar {
-    width: 8px;
-}
-
-.event-description::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.event-description::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-.event-description::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
+/* Remove all scrollbar styling since we don't need it anymore */
 
 /* More Images Gallery */
 .event-images-gallery-wrapper {
@@ -149,7 +148,7 @@
     }
 
     .event-description {
-        max-height: 300px; /* Adjust for smaller screens */
+        padding: 15px 0; /* Adjust padding for smaller screens */
     }
 
     .gallery-thumbnail {
@@ -158,7 +157,8 @@
     }
 
     .event-navigation-top .btn,
-    .event-navigation-bottom .btn {
+    .event-navigation-bottom .btn,
+    .event-navigation-description .btn {
         font-size: 0.9rem;
         padding: 8px 12px;
     }
@@ -181,7 +181,8 @@
     }
 
     .event-navigation-top .col-6,
-    .event-navigation-bottom .col-6 {
+    .event-navigation-bottom .col-6,
+    .event-navigation-description .col-6 {
         flex: 0 0 100%; /* Make them full width */
         max-width: 100%;
         text-align: center !important;
@@ -189,7 +190,8 @@
     }
 
     .event-navigation-top .btn,
-    .event-navigation-bottom .btn {
+    .event-navigation-bottom .btn,
+    .event-navigation-description .btn {
         width: 100%; /* Full width button */
     }
 

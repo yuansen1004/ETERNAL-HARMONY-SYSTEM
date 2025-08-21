@@ -1,6 +1,10 @@
 @extends('layout')
 
 @section('content')
+    <!-- Quill CSS -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/quill-custom.css') }}">
+    
     <style>
         /* Styles copied from your event-form-container for consistency */
         .event-form-container {
@@ -130,9 +134,9 @@
             box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
+        /* Quill editor styling */
+        .ql-editor {
+            min-height: 200px;
             font-family: inherit;
         }
     </style>
@@ -149,7 +153,8 @@
             </div>
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter package description..." required>{{ old('description', $package->description) }}</textarea>
+                <div id="quill-editor" style="height: 300px; margin-bottom: 10px; border: 1px solid #ccc; background: #fff;"></div>
+                <input type="hidden" id="description" name="description" value="{{ old('description', $package->description) }}" required>
             </div>
             <div class="form-group">
                 <label for="price">Price</label>
@@ -174,4 +179,8 @@
             <a href="{{ route('packages.index') }}" class="btn-cancel">Cancel</a>
         </form>
     </div>
+
+    <!-- Quill JavaScript -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="{{ asset('js/quill-editor.js') }}"></script>
 @endsection

@@ -1,6 +1,9 @@
 @extends('layout')
 
 @section('content')
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/quill-custom.css') }}">
 <style>
     .event-form-container {
         background-color: #ffffff;
@@ -94,6 +97,12 @@
         resize: vertical;
         font-family: inherit;
     }
+
+    /* Quill editor styling */
+    .ql-editor {
+        min-height: 200px;
+        font-family: inherit;
+    }
 </style>
 
 <div class="event-form-container">
@@ -125,7 +134,8 @@
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" placeholder="Enter event description..." required>{{ old('description', $event->description) }}</textarea>
+            <div id="quill-editor" style="height: 300px; margin-bottom: 10px; border: 1px solid #ccc; background: #fff;"></div>
+            <input type="hidden" id="description" name="description" value="{{ old('description', $event->description) }}" required>
         </div>
         <div class="form-group">
             <label for="sub_description">Sub Description</label>
@@ -142,4 +152,8 @@
         <button type="submit" class="btn-primary">Update Event</button>
     </form>
 </div>
+
+<!-- Quill JavaScript -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="{{ asset('js/quill-editor.js') }}"></script>
 @endsection

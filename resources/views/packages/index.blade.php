@@ -60,7 +60,11 @@
                         <td>{{ $package->package_name }}</td>
                         <td>{{ $package->company->company_name ?? 'N/A' }}</td>
                         <td>{{ $package->price }}</td>
-                        <td>{!! $package->description !!}</td>
+                        <td>
+                            <div class="package-description-cell" title="{{ strip_tags($package->description) }}">
+                                {!! $package->description !!}
+                            </div>
+                        </td>
                         <td>
                             <div style="display: flex;">
                                 <a href="{{ route('packages.edit', $package->id) }}" class="btn-action btn-edit">Edit</a>
@@ -77,6 +81,50 @@
             </table>
         @endif
     </div>
+
+    <style>
+        .package-description-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+            max-height: 1.2em;
+        }
+        
+        .package-description-cell * {
+            display: inline !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+        
+        .package-description-cell p {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .package-description-cell ul, 
+        .package-description-cell ol {
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+        }
+        
+        .package-description-cell li {
+            display: inline !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .package-description-cell li:before {
+            content: "• " !important;
+        }
+        
+        .package-description-cell li:after {
+            content: " " !important;
+        }
+    </style>
 @endsection
 
 @section('scripts')
