@@ -89,10 +89,21 @@
             border-top: 2px solid #e9ecef;
             padding-top: 20px;
         }
+        .signature-container {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 40px !important;
+            flex-direction: row !important;
+        }
+        .signature-field {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
         .signature-line {
             border-bottom: 1px solid #333;
             height: 30px;
             margin-bottom: 5px;
+            width: 100% !important;
         }
         .signature-label {
             font-size: 14px;
@@ -146,7 +157,12 @@
             <span class="info-label">Order Type:</span> {{ ucfirst($orderType) }}
         </div>
         <div class="info-item">
-            <span class="info-label">Responsible Agent:</span> {{ $agentName }}
+            <span class="info-label">Responsible Agent:</span> 
+            @if($order->user)
+                {{ $order->user->name }}
+            @else
+                <span style="color: #dc3545; font-style: italic;">No agent assigned</span>
+            @endif
         </div>
     </div>
 
@@ -325,12 +341,12 @@
 
     <div class="signature-section">
         @if($order->user)
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-                <div>
+            <div class="signature-container">
+                <div class="signature-field">
                     <div class="signature-line"></div>
                     <div class="signature-label">Agent Name and Signature</div>
                 </div>
-                <div>
+                <div class="signature-field">
                     <div class="signature-line"></div>
                     <div class="signature-label">Date</div>
                 </div>

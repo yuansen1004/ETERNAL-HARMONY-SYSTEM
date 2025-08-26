@@ -158,7 +158,7 @@
                     <td style="display: flex; align-items: center; gap: 10px;">
                         <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-sm btn-edit">Edit</a>
                         @if(Auth::user()->role === 'staff' || Auth::user()->role === 'admin')
-                            <a href="{{ route('orders.export-pdf', $order->id) }}" class="btn-edit">📄PDF</a>
+                            <a href="{{ route('orders.export-pdf', $order->id) }}" class="btn-edit">PDF</a>
                         @endif
                     </td>
                 </tr>

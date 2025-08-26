@@ -13,7 +13,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory']);
+        $query = Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory', 'user']);
 
         // Search functionality
         if ($request->filled('search')) {
@@ -75,13 +75,13 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = \App\Models\Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory'])->findOrFail($id);
+        $order = \App\Models\Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory', 'user'])->findOrFail($id);
         return view('order', compact('order'));
     }
 
     public function edit($id)
     {
-        $order = Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory'])->findOrFail($id);
+        $order = Order::with(['customer', 'package', 'inventoryItem.inventory', 'inventoryItems.inventory', 'user'])->findOrFail($id);
         return view('orders.edit', compact('order'));
     }
 
@@ -168,7 +168,7 @@ class OrderController extends Controller
         
         // Generate filename
         $orderType = $order->package ? 'package' : 'inventory';
-        $agentName = $order->user ? str_replace(' ', '-', $order->user->name) : 'unknown';
+        $agentName = $order->user ? str_replace(' ', '-', $order->user->name) : 'no-agent';
         $date = $order->order_date->format('Y-m-d');
         $filename = "Order-{$orderType}-{$agentName}-{$date}.pdf";
         
@@ -176,7 +176,6 @@ class OrderController extends Controller
         $data = [
             'order' => $order,
             'orderType' => $orderType,
-            'agentName' => $order->user ? $order->user->name : 'Unknown Agent',
             'currentDate' => now()->format('d M Y'),
         ];
         

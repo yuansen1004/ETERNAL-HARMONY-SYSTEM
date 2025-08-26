@@ -211,10 +211,10 @@
                 <label for="price_range" class="form-label">Price Range:</label>
                 <select class="form-select" id="price_range" name="price_range" onchange="this.form.submit()">
                     <option value="">All Prices</option>
-                    <option value="0-100" {{ request('price_range') == '0-100' ? 'selected' : '' }}>Under RM100</option>
-                    <option value="100-500" {{ request('price_range') == '100-500' ? 'selected' : '' }}>RM100 - RM500</option>
-                    <option value="500-1000" {{ request('price_range') == '500-1000' ? 'selected' : '' }}>RM500 - RM1000</option>
-                    <option value="1000+" {{ request('price_range') == '1000+' ? 'selected' : '' }}>Above RM1000</option>
+                    <option value="0-10000" {{ request('price_range') == '0-10000' ? 'selected' : '' }}>Under RM10000</option>
+                    <option value="10000-20000" {{ request('price_range') == '10000-20000' ? 'selected' : '' }}>RM10000 - RM20000</option>
+                    <option value="20000-30000" {{ request('price_range') == '20000-30000' ? 'selected' : '' }}>RM20000 - RM30000</option>
+                    <option value="30000-999999999" {{ request('price_range') == '30000-999999999' ? 'selected' : '' }}>Above RM30000</option>
                 </select>
             </div>
             <a href="{{ route('packages.browse') }}" class="btn-filter-clear" style="margin-left: 10px;">Clear Filter</a>

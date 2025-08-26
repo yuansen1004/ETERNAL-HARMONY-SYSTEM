@@ -30,6 +30,15 @@ class PackageController extends Controller
             $query->where('company_id', $request->company_id);
         }
 
+        // Handle price range filtering
+        if ($request->has('min_price') && $request->min_price !== null && $request->min_price !== '') {
+            $query->where('price', '>=', (float)$request->min_price);
+        }
+        
+        if ($request->has('max_price') && $request->max_price !== null && $request->max_price !== '') {
+            $query->where('price', '<=', (float)$request->max_price);
+        }
+
         $packages = $query->paginate(10);
         return view('packages.index', compact('packages', 'companies'));
     }

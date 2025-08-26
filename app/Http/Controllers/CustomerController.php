@@ -8,6 +8,7 @@ use App\Models\Package;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -71,6 +72,7 @@ class CustomerController extends Controller
         $orderData = [
             'customer_id' => $customer->id,
             'package_id' => $package->id,
+            'user_id' => Auth::id(), // Add the current authenticated user (agent)
             'order_date' => now(),
             'payment_status' => 'pending',
             'payment_method' => $validated['payment_method'],
