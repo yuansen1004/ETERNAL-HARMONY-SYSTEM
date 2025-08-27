@@ -3,7 +3,9 @@
 <div class="background-container">
     <div class="header-row">
         <h2>Inventory</h2>
+        @if(Auth::check() && Auth::user()->role === 'staff')
         <a href="{{ route('inventory.slot.create') }}" class="inventory-btn">+ Add Slot</a>
+        @endif
     </div>
     <div>
         <div class="inventory-section-title">Categories</div>

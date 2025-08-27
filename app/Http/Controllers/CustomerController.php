@@ -209,7 +209,20 @@ class CustomerController extends Controller
         ])->findOrFail($id);
 
         $package_orders = $customer->orders->whereNotNull('package_id');
-        $slot_orders = $customer->orders->whereNotNull('inventory_item_id');
+        $slot_orders = $customer->orders->filter(function($order) {
+            // Check for single slot purchase
+            if ($order->inventory_item_id !== null) {
+                return true;
+            }
+            
+            // Check for bulk purchase by looking at receipt_details
+            if ($order->receipt_details && isset($order->receipt_details['items'])) {
+                return count($order->receipt_details['items']) > 0;
+            }
+            
+            // Check for bulk purchase by looking at inventoryItems relationship
+            return $order->inventoryItems->isNotEmpty();
+        });
         return view('customer.show', compact('customer', 'package_orders', 'slot_orders'));
     }
 

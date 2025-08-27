@@ -299,6 +299,7 @@
                             <th>Slot ID</th>
                             <th>User Name</th>
                             <th>Company</th>
+                            <th>Category</th>
                             <th>Order Date</th>
                             <th>Payment Progress</th>
                             <th>Total Amount</th>
@@ -347,6 +348,17 @@
                                     {{ $company ? $company->company_name : 'N/A' }}
                                 @else
                                     {{ $order->inventoryItem->inventory->company->company_name ?? 'N/A' }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($order->isBulkPurchase())
+                                    @php
+                                        $firstItem = $order->getAllInventoryItems()->first();
+                                        $category = $firstItem ? $firstItem->inventory->category : null;
+                                    @endphp
+                                    {{ $category ? ucfirst(str_replace('_', ' ', $category)) : 'N/A' }}
+                                @else
+                                    {{ ucfirst(str_replace('_', ' ', $order->inventoryItem->inventory->category ?? 'N/A')) }}
                                 @endif
                             </td>
                             <td>{{ $order->order_date->format('d M Y') }}</td>

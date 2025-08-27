@@ -87,7 +87,12 @@ class Order extends Model
      */
     public function getAllInventoryItems()
     {
-        // Use the many-to-many relationship if available
+        // Use the many-to-many relationship if available (loaded relationship first)
+        if (isset($this->relations['inventoryItems']) && $this->inventoryItems->count() > 0) {
+            return $this->inventoryItems;
+        }
+        
+        // Use the many-to-many relationship if available (database query)
         if ($this->inventoryItems()->count() > 0) {
             return $this->inventoryItems;
         }
@@ -107,7 +112,12 @@ class Order extends Model
      */
     public function isBulkPurchase(): bool
     {
-        // Check pivot table first
+        // Check pivot table first (use loaded relationship if available)
+        if (isset($this->relations['inventoryItems']) && $this->inventoryItems->count() > 1) {
+            return true;
+        }
+        
+        // Check pivot table with database query if relationship not loaded
         if ($this->inventoryItems()->count() > 1) {
             return true;
         }
@@ -123,7 +133,12 @@ class Order extends Model
      */
     public function getItemCount(): int
     {
-        // Check pivot table first
+        // Check pivot table first (loaded relationship)
+        if (isset($this->relations['inventoryItems']) && $this->inventoryItems->count() > 0) {
+            return $this->inventoryItems->count();
+        }
+        
+        // Check pivot table with database query
         $pivotCount = $this->inventoryItems()->count();
         if ($pivotCount > 0) {
             return $pivotCount;
