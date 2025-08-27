@@ -199,30 +199,67 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-        $customer = Customer::with([
-            'orders.package.company',
-            'orders.inventoryItem.inventory.company',
-            'orders.inventoryItems.inventory.company',
-            'orders' => function($query) {
-                $query->orderBy('order_date', 'desc');
-            }
-        ])->findOrFail($id);
+        // Load the primary customer first
+        $primaryCustomer = Customer::findOrFail($id);
 
-        $package_orders = $customer->orders->whereNotNull('package_id');
-        $slot_orders = $customer->orders->filter(function($order) {
-            // Check for single slot purchase
+        // Find potential duplicate customer records (same name/email/phone)
+        // We'll merge orders across records that match at least 2 of these 3 fields
+        $potentialMatches = Customer::where(function($q) use ($primaryCustomer) {
+                $q->where('customer_name', $primaryCustomer->customer_name)
+                  ->orWhere('email', $primaryCustomer->email)
+                  ->orWhere('phone_number', $primaryCustomer->phone_number);
+            })
+            ->with([
+                'orders.package.company',
+                'orders.inventoryItem.inventory.company',
+                'orders.inventoryItems.inventory.company',
+                'orders' => function($query) {
+                    $query->orderBy('order_date', 'desc');
+                }
+            ])
+            ->get();
+
+        // Group by dedup rule (>= 2 matching fields)
+        $matchingCustomers = $potentialMatches->filter(function($other) use ($primaryCustomer) {
+            $matches = 0;
+            if ($other->customer_name === $primaryCustomer->customer_name) $matches++;
+            if ($other->email === $primaryCustomer->email) $matches++;
+            if ($other->phone_number === $primaryCustomer->phone_number) $matches++;
+            return $matches >= 2;
+        });
+
+        // Ensure the primary customer is included
+        if (!$matchingCustomers->contains('id', $primaryCustomer->id)) {
+            $matchingCustomers->push($primaryCustomer->load([
+                'orders.package.company',
+                'orders.inventoryItem.inventory.company',
+                'orders.inventoryItems.inventory.company',
+                'orders' => function($query) {
+                    $query->orderBy('order_date', 'desc');
+                }
+            ]));
+        }
+
+        // Merge orders across all matching customers
+        $mergedOrders = $matchingCustomers->flatMap(function($cust) {
+            return $cust->orders;
+        })->sortByDesc('order_date')->values();
+
+        // Build the display data
+        $package_orders = $mergedOrders->whereNotNull('package_id');
+        $slot_orders = $mergedOrders->filter(function($order) {
             if ($order->inventory_item_id !== null) {
                 return true;
             }
-            
-            // Check for bulk purchase by looking at receipt_details
             if ($order->receipt_details && isset($order->receipt_details['items'])) {
                 return count($order->receipt_details['items']) > 0;
             }
-            
-            // Check for bulk purchase by looking at inventoryItems relationship
             return $order->inventoryItems->isNotEmpty();
         });
+
+        // For the header, keep showing the primary customer's identity
+        $customer = $primaryCustomer;
+
         return view('customer.show', compact('customer', 'package_orders', 'slot_orders'));
     }
 
